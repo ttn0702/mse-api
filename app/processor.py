@@ -1,4 +1,5 @@
-from utils.utils import SentimentAnalysisModel
+# from utils.utils import SentimentAnalysisModel
+from utils.utils import SentimentAnalysisModel 
 
 
 def analyze_content(content):

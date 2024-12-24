@@ -1,0 +1,6 @@
+flask
+numpy
+requests
+flask_sqlalchemy
+flask_restx
+underthesea

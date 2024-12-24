@@ -1,6 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, jsonify
 
+from app.processor import analyze_content
+
 api = Namespace("Predict", description="API phân tích cảm xúc")
 
 # Định nghĩa model cho input
@@ -13,11 +15,6 @@ predict_response_model = api.model("PredictOutput", {
     "message": fields.String(description="Thông báo kết quả"),
     "result": fields.String(description="Cảm xúc dự đoán (NEG, NEU, POS)"),
 })
-
-# Hàm giả lập phân tích nội dung
-def analyze_content(content):
-    # Đơn giản hóa để trả về kết quả giả lập
-    return 2 if "good" in content.lower() else 0
 
 @api.route("/")
 class Predict(Resource):
