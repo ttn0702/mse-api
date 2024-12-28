@@ -19,7 +19,6 @@ predict_response_model = api.model("PredictOutput", {
 @api.route("/")
 class Predict(Resource):
     @api.expect(predict_model, validate=True)
-    @api.marshal_with(predict_response_model)
     def post(self):
         """Phân tích cảm xúc từ nội dung"""
         data = request.json

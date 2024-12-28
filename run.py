@@ -1,11 +1,11 @@
 from app import create_app, db
+from app.init_db import init_db
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 app = create_app()
 
 if __name__ == "__main__":
-    # Tạo database nếu chưa tồn tại
     with app.app_context():
         db.create_all()
 

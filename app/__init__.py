@@ -5,7 +5,7 @@ from config import Config
 
 db = SQLAlchemy()
 
-# Tạo đối tượng API từ Flask-RESTx
+
 api = Api(title="Social Network API", version="1.0", description="API quản lý Profile, Post, và Comment")
 
 def create_app():
@@ -13,7 +13,6 @@ def create_app():
     app.config.from_object(Config)
     db.init_app(app)
 
-    # Đăng ký API
     from app.routes import register_routes
     register_routes(api, app)
 
