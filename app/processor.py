@@ -9,5 +9,4 @@ def analyze_content(content):
         stopwords_path='data/vietnamese-stopwords-dash.txt'
     )
     predicted_labels = model.bilstm_predictive_model(content)
-    print(predicted_labels)
     return predicted_labels

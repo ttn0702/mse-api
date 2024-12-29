@@ -55,7 +55,6 @@ class PostComments(Resource):
             comments = Comment.query.filter_by(post_id=post_id, sentiment=sentiment).all()  # Lọc theo sentiment
         else:
             comments = Comment.query.filter_by(post_id=post_id).all()  # Lấy tất cả nếu không có sentiment
-        print(comments)
         return jsonify([comment.to_dict() for comment in comments])
 
     @api.expect(comment_model)

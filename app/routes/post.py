@@ -68,7 +68,6 @@ class PostResource(Resource):
     def get(self, post_id):
         """Lấy thông tin bài viết theo ID"""
         post = Post.query.get_or_404(post_id)
-        print(post)
         return post.to_dict()  # Trả về thông tin bài viết dưới dạng dict
 
     @api.expect(post_model)

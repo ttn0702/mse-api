@@ -58,8 +58,7 @@ def add_posts_from_json(json_file):
             existing_post = Post.query.filter_by(
                 post_id=post_data["post_id"]).first()
             if existing_post:
-                print(
-                    f"Post with post_id {post_data['post_id']} already exists. Skipping...")
+                print(f"Post with post_id {post_data['post_id']} already exists. Skipping...")
                 continue  # Bỏ qua nếu đã tồn tại
 
             # Tạo mới đối tượng Post
@@ -96,7 +95,6 @@ def add_comments_from_json(json_file):
             comment_id=comment_data.get("comment_id")
         ).first()
 
-        print('comment', existing_comment)
         if not existing_comment:
             new_comment = Comment(
                 comment_id=comment_data.get("comment_id", ""),
