@@ -17,3 +17,4 @@ venv/
 
 index.py
 info_url.py
+.venv

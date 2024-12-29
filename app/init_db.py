@@ -2,13 +2,15 @@ import json
 from app import db
 from app.models import Profile, Post, Comment
 
+
 def add_profiles_from_json(json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         profiles = json.load(f)
-    
+
     for profile_data in profiles:
         # Tạo hoặc cập nhật bản ghi
-        profile = Profile.query.filter_by(profile_id=profile_data['profile_id']).first()
+        profile = Profile.query.filter_by(
+            profile_id=profile_data['profile_id']).first()
         if profile:
             # Cập nhật nếu profile đã tồn tại
             profile.profile_name = profile_data['profile_name']
@@ -41,20 +43,23 @@ def add_profiles_from_json(json_file):
                 work=profile_data.get('work', '')
             )
             db.session.add(profile)
-    
+
     # Commit tất cả các thay đổi
     db.session.commit()
+
 
 def add_posts_from_json(json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         posts_data = json.load(f)
-    
+
     for post_data in posts_data:
         try:
             # Kiểm tra xem post_id đã tồn tại chưa
-            existing_post = Post.query.filter_by(post_id=post_data["post_id"]).first()
+            existing_post = Post.query.filter_by(
+                post_id=post_data["post_id"]).first()
             if existing_post:
-                print(f"Post with post_id {post_data['post_id']} already exists. Skipping...")
+                print(
+                    f"Post with post_id {post_data['post_id']} already exists. Skipping...")
                 continue  # Bỏ qua nếu đã tồn tại
 
             # Tạo mới đối tượng Post
@@ -64,10 +69,12 @@ def add_posts_from_json(json_file):
                 author_id=post_data["author_id"],
                 author_name=post_data["author_name"],
                 content=post_data["content"],
-                images=json.dumps(post_data["images"]),  # Chuyển đổi danh sách thành chuỗi JSON
+                # Chuyển đổi danh sách thành chuỗi JSON
+                images=json.dumps(post_data["images"]),
                 created_time=post_data["created_time"],
                 like_count=post_data["like_count"],  # Cập nhật tên trường
-                comment_count=post_data["comment_count"],  # Cập nhật tên trường
+                # Cập nhật tên trường
+                comment_count=post_data["comment_count"],
                 share_count=post_data["share_count"]  # Cập nhật tên trường
             )
 
@@ -79,25 +86,33 @@ def add_posts_from_json(json_file):
     # Commit tất cả các thay đổi
     db.session.commit()
 
+
 def add_comments_from_json(json_file):
     with open(json_file, 'r', encoding='utf-8') as f:
         comments_data = json.load(f)
-    
+
     for comment_data in comments_data:
-        new_comment = Comment(
-            comment_id=comment_data.get("comment_id", ""),
-            content=comment_data.get("content", ""),
-            post_id=comment_data.get("post_id", ""),
-            profile_id=comment_data.get("profile_id", ""),
-            author_id=comment_data.get("author_id", ""),
-            author_name=comment_data.get("author_name", ""),
-            created_time=comment_data.get("created_time", None),
-            like_count=comment_data.get("like_count", 0),
-            sentiment=comment_data.get("sentiment", 1)
-        )
-        db.session.add(new_comment)
-    
+        existing_comment = db.session.query(Comment).filter_by(
+            comment_id=comment_data.get("comment_id")
+        ).first()
+
+        print('comment', existing_comment)
+        if not existing_comment:
+            new_comment = Comment(
+                comment_id=comment_data.get("comment_id", ""),
+                content=comment_data.get("content", ""),
+                post_id=comment_data.get("post_id", ""),
+                profile_id=comment_data.get("profile_id", ""),
+                author_id=comment_data.get("author_id", ""),
+                author_name=comment_data.get("author_name", ""),
+                created_time=comment_data.get("created_time", None),
+                like_count=comment_data.get("like_count", 0),
+                sentiment=comment_data.get("sentiment", 1)
+            )
+            db.session.add(new_comment)
+
     db.session.commit()
+
 
 def init_db():
     # db.create_all()
@@ -105,4 +120,3 @@ def init_db():
     add_posts_from_json('data/temp_data/post.json')
     add_posts_from_json('data/temp_data/post_fb.json')
     add_comments_from_json('data/temp_data/comment_fb.json')
-

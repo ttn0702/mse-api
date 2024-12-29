@@ -20,19 +20,22 @@ post_model = api.model("Post", {
     "updated_at": fields.DateTime(description="Ngày cập nhật"),
 })
 
+
 @api.route("/")
 class PostList(Resource):
     def get(self):
         """Lấy danh sách bài viết"""
-        posts = Post.query.all()  # Lấy tất cả bài viết
-        return jsonify([post.to_dict() for post in posts])  # Trả về danh sách bài viết dưới dạng JSON
+        posts = Post.query.limit(20).all()  # Lấy tất cả bài viết
+        # Trả về danh sách bài viết dưới dạng JSON
+        return jsonify([post.to_dict() for post in posts])
 
     @api.expect(post_model)
     def post(self):
         """Tạo bài viết mới"""
         data = request.json
         if Post.query.filter_by(post_id=data["post_id"]).first():
-            return {"message": "Post ID đã tồn tại", "id": data["post_id"]}, 400  # Trả về lỗi nếu đã tồn tại
+            # Trả về lỗi nếu đã tồn tại
+            return {"message": "Post ID đã tồn tại", "id": data["post_id"]}, 400
 
         new_post = Post(
             post_id=data.get("post_id", ""),
@@ -54,8 +57,11 @@ class PostList(Resource):
     class ProfilePosts(Resource):
         def get(self, profile_id):
             """Lấy tất cả bài viết của một người dùng theo profile_id"""
-            posts = Post.query.filter_by(profile_id=profile_id).all()  # Lấy tất cả bài viết của profile_id
-            return jsonify([post.to_dict() for post in posts])  # Trả về danh sách bài viết dưới dạng JSON
+            posts = Post.query.filter_by(profile_id=profile_id).limit(20).all(
+            )  # Lấy tất cả bài viết của profile_id
+            # Trả về danh sách bài viết dưới dạng JSON
+            return jsonify([post.to_dict() for post in posts])
+
 
 @api.route("/<string:post_id>")
 class PostResource(Resource):
@@ -71,12 +77,17 @@ class PostResource(Resource):
         post = Post.query.get_or_404(post_id)
         data = request.json
         post.content = data.get("content", post.content)
-        post.author_name = data.get("author_name", post.author_name)  # Cập nhật trường author_name
+        # Cập nhật trường author_name
+        post.author_name = data.get("author_name", post.author_name)
         post.images = data.get("images", post.images)  # Cập nhật trường images
-        post.created_time = data.get("created_time", post.created_time)  # Cập nhật trường created_time
-        post.like_count = data.get("like_count", post.like_count)  # Sửa từ post.likes thành post.like_count
-        post.comment_count = data.get("comment_count", post.comment_count)  # Sửa từ post.comments thành post.comment_count
-        post.share_count = data.get("share_count", post.share_count)  # Sửa từ post.shares thành post.share_count
+        # Cập nhật trường created_time
+        post.created_time = data.get("created_time", post.created_time)
+        # Sửa từ post.likes thành post.like_count
+        post.like_count = data.get("like_count", post.like_count)
+        # Sửa từ post.comments thành post.comment_count
+        post.comment_count = data.get("comment_count", post.comment_count)
+        # Sửa từ post.shares thành post.share_count
+        post.share_count = data.get("share_count", post.share_count)
         db.session.commit()
         return {"message": "Post updated", "id": post.post_id}, 200
 
